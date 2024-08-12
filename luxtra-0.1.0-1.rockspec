@@ -2,8 +2,7 @@ package = "luxtra"
 version = "0.1.0-1"
 
 source = {
-	url = "git://github.com/ropoko/luxtra",
-	tag = "v0.1.0"
+	url = "git://github.com/ropoko/luxtra"
 }
 
 description = {
@@ -19,7 +18,7 @@ description = {
 }
 
 dependencies = {
-	"lua >= 5.4.6",
+	"lua >= 5.4",
 	"luafilesystem >= 1.8.0-1",
 	"etlua >= 1.3.0-1"
 }
@@ -28,7 +27,7 @@ build = {
 	type = "builtin",
 
 	modules = {
-		["luxtra"] = "src/main.lua",
+		["luxtra"] = "main.lua",
 		["luxtra.core.markdown"] = "src/core/markdown_parser.lua",
 		["luxtra.utils.file"] = "src/utils/file.lua",
 		["luxtra.types.directories"] = "src/types/directories.lua"
