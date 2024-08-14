@@ -1,27 +1,40 @@
 local lummander = require('lummander')
-local Actions = require('core.cli.actions')
+local Actions = require('src.core.cli.actions')
 
-local cli = lummander.new({
-	title = 'Luxtra',
-	tag = 'luxtra',
-	description = 'Static blog generator based on markdown',
-	version = '0.0.1',
-	author = 'ropoko',
-	theme = "acid",
-	flag_prevent_help = false
-})
+local Cli = {
+	instance = nil
+}
 
-cli
-	:command('generate', 'generate a placeholder project for your blog')
-	:action(function()
+function Cli:new()
+	self.instance = lummander.new({
+		title = 'Luxtra',
+		tag = 'luxtra',
+		description = 'Static blog generator based on markdown',
+		version = '0.0.1',
+		author = 'ropoko',
+		theme = "acid",
+		flag_prevent_help = false
+	})
+end
+
+function Cli:options()
+	self.instance:command('generate', 'start your blog')
+	:action(function(parsed)
 		Actions:generate()
 	end)
 
 
-cli
-	:command('build', 'generate the website')
-	:action(function()
+	self.instance:command('build', 'build the website')
+	:action(function(parsed)
 		Actions:build()
 	end)
+end
 
-cli:parse(arg)
+
+function Cli:run(arg)
+	self:new()
+	self:options()
+	self.instance:parse(arg)
+end
+
+return Cli
