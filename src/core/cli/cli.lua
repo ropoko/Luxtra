@@ -1,5 +1,5 @@
 local lummander = require('lummander')
-local Actions = require('src.core.cli.actions')
+local Actions = require('luxtra.core.cli.actions')
 
 local Cli = {
 	instance = nil

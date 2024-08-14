@@ -1,0 +1,4 @@
+#!/usr/bin/env lua
+
+local Cli = require('luxtra.core.cli.cli')
+Cli:run(arg)
