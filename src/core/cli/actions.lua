@@ -14,8 +14,8 @@ local Actions = {}
 local test_path = 'test/'
 
 function Actions:generate()
-	lfs.mkdir(test_path .. 'pages')
-	lfs.mkdir(test_path .. 'public')
+	lfs.mkdir(test_path .. DirectoriesType.PAGES_DIR)
+	lfs.mkdir(test_path .. DirectoriesType.DOCS_DIR)
 
 	local config = io.open(test_path .. 'luxtra.config.json', 'w')
 
