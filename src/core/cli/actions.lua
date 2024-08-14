@@ -92,7 +92,7 @@ local function generate_index_page(frontmatter)
 
 	local html = render_html({ title = CONFIG.title, frontmatter = frontmatter })
 
-	FileUtils.save_html_file(test_path..DirectoriesType.PUBLIC_DIR..'/index', html)
+	FileUtils.save_html_file(test_path..DirectoriesType.DOCS_DIR..'/index', html)
 end
 
 local function process_markdown_files()
@@ -107,7 +107,7 @@ local function process_markdown_files()
 				table.insert(frontmatter_list, frontmatter)
 
 				local html = MarkdownParser:parse(markdown_content)
-				FileUtils.save_html_file(test_path..DirectoriesType.PUBLIC_DIR..'/'..frontmatter.slug, html)
+				FileUtils.save_html_file(test_path..DirectoriesType.DOCS_DIR..'/'..frontmatter.slug, html)
 			end
 
 		end
