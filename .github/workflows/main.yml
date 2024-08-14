@@ -30,7 +30,7 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        path: './docs'
+        path: 'docs/'
 
   deploy:
     needs: build
