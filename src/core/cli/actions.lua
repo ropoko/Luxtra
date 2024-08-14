@@ -1,13 +1,12 @@
 local io = require('io')
-local lfs = require('lfs')
-local json = require('lib.json')
-
-local etlua = require('etlua')
 local os = require('os')
+local lfs = require('lfs')
+local etlua = require('etlua')
 
-local MarkdownParser = require('src.core.markdown_parser')
-local DirectoriesType = require('src.types.directories')
-local FileUtils = require('src.utils.file')
+local json = require('luxtra.lib.json')
+local MarkdownParser = require('luxtra.core.markdown_parser')
+local DirectoriesType = require('luxtra.types.directories')
+local FileUtils = require('luxtra.utils.file')
 
 local Actions = {}
 

@@ -21,15 +21,18 @@ dependencies = {
 build = {
    type = "builtin",
    modules = {
-      ["core.cli.actions"] = "src/core/cli/actions.lua",
-      ["core.cli.cli"] = "src/core/cli/cli.lua",
-      ["core.markdown_parser"] = "src/core/markdown_parser.lua",
-      ["types.directories"] = "src/types/directories.lua",
-      ["utils.file"] = "src/utils/file.lua"
+			luxtra = "main.lua",
+			["luxtra.lib.json"] = "lib/json.lua",
+      ["luxtra.core.cli.actions"] = "src/core/cli/actions.lua",
+      ["luxtra.core.cli.cli"] = "src/core/cli/cli.lua",
+      ["luxtra.core.markdown_parser"] = "src/core/markdown_parser.lua",
+      ["luxtra.types.directories"] = "src/types/directories.lua",
+      ["luxtra.utils.file"] = "src/utils/file.lua"
    },
+
    install = {
       bin = {
-         "bin/luxtra"
+        "bin/luxtra"
       }
    }
 }

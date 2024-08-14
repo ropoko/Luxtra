@@ -1,3 +1,2 @@
-local Cli = require('src.core.cli.cli')
-
+local Cli = require('luxtra.core.cli.cli')
 Cli:run(arg)
