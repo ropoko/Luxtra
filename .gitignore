@@ -3,4 +3,4 @@
 *.src.rock
 deps/
 public/
-test/
+# test/
