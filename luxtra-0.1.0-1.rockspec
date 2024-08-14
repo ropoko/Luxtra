@@ -28,11 +28,11 @@ build = {
 	type = "builtin",
 
 	modules = {
-		["luxtra"] = "main.lua",
-		["core.cli"] = "src/core/cli.lua",
-		["luxtra.core.markdown"] = "src/core/markdown_parser.lua",
-		["luxtra.utils.file"] = "src/utils/file.lua",
-		["luxtra.types.directories"] = "src/types/directories.lua"
+		["core.cli.actions"] = "src/core/cli/actions.lua",
+		["core.cli.cli"] = "src/core/cli/cli.lua",
+		["core.markdown_parser"] = "src/core/markdown_parser.lua",
+		["types.directories"] = "src/types/directories.lua",
+		["utils.file"] = "src/utils/file.lua"
 	},
 
 	install = {

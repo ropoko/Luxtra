@@ -2,3 +2,5 @@
 .DS_Store
 *.src.rock
 deps/
+public/
+test/

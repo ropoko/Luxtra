@@ -1,4 +1,5 @@
 local lummander = require('lummander')
+local Actions = require('core.cli.actions')
 
 local cli = lummander.new({
 	title = 'Luxtra',
@@ -12,15 +13,15 @@ local cli = lummander.new({
 
 cli
 	:command('generate', 'generate a placeholder project for your blog')
-	:action(function(parsed)
-		---
+	:action(function()
+		Actions:generate()
 	end)
 
 
 cli
 	:command('build', 'generate the website')
-	:action(function(parsed)
-		----
+	:action(function()
+		Actions:build()
 	end)
 
 cli:parse(arg)
