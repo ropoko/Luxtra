@@ -10,8 +10,8 @@ Inspired by Nextra.
 - [ ] add themes
 - - [ ] light/dark mode
 - [ ] add about page
-- [ ] add cli tools
-- [ ] publish on luarocks
-- [ ] publish working example using github pages
+- [x] add cli tools
+- [x] publish on luarocks
+- [x] publish working example using github pages - [https://ropoko.github.io/test-luxtra/](https://github.com/ropoko/test-luxtra)
 - [ ] add tags support
 - [ ] add code highlight
