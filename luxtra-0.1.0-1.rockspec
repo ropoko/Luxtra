@@ -6,10 +6,10 @@ source = {
 }
 
 description = {
-	summary = "Blog generator based on markdown inspired by Nextra",
+	summary = "Static blog generator based on markdown",
 
 	detailed = [[
-		luxtra is a static site generator written in Lua.
+		Luxtra is a static site generator written in Lua, inspired by Nextra.
 		It processes Markdown files and generates a static blog website.
 	]],
 
@@ -29,6 +29,7 @@ build = {
 
 	modules = {
 		["luxtra"] = "main.lua",
+		["core.cli"] = "src/core/cli.lua",
 		["luxtra.core.markdown"] = "src/core/markdown_parser.lua",
 		["luxtra.utils.file"] = "src/utils/file.lua",
 		["luxtra.types.directories"] = "src/types/directories.lua"
