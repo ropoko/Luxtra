@@ -11,13 +11,11 @@ local FileUtils = require('src.utils.file')
 
 local Actions = {}
 
-local test_path = 'test/'
-
 function Actions:generate()
-	lfs.mkdir(test_path .. DirectoriesType.PAGES_DIR)
-	lfs.mkdir(test_path .. DirectoriesType.DOCS_DIR)
+	lfs.mkdir(DirectoriesType.PAGES_DIR)
+	lfs.mkdir(DirectoriesType.DOCS_DIR)
 
-	local config = io.open(test_path .. 'luxtra.config.json', 'w')
+	local config = io.open('luxtra.config.json', 'w')
 
 	local config_content = [[
 	{
@@ -31,7 +29,7 @@ function Actions:generate()
 	config:write((config_content:gsub("^%s+", ""):gsub("\n%s+", "\n")))
 	config:close()
 
-	local page1 = io.open(test_path .. 'pages/page1.md', 'w')
+	local page1 = io.open(DirectoriesType.PAGES_DIR .. '/page1.md', 'w')
 	if not page1 then return end
 
 	local content = [[
@@ -56,14 +54,14 @@ local CONFIG = {}
 		- *.md
 ]]
 local function check_directories()
-	if not FileUtils.file_exists(test_path..DirectoriesType.CONFIG_FILE) then
+	if not FileUtils.file_exists(DirectoriesType.CONFIG_FILE) then
 		print('luxtra.config.json not found')
 		os.exit(1)
 	end
 
-	CONFIG = json.decode(FileUtils.get_file_content(test_path..DirectoriesType.CONFIG_FILE))
+	CONFIG = json.decode(FileUtils.get_file_content(DirectoriesType.CONFIG_FILE))
 
-	if not FileUtils.file_exists(test_path..DirectoriesType.PAGES_DIR) then
+	if not FileUtils.file_exists(DirectoriesType.PAGES_DIR) then
 		print('pages/ directory not found')
 		os.exit(1)
 	end
@@ -92,22 +90,22 @@ local function generate_index_page(frontmatter)
 
 	local html = render_html({ title = CONFIG.title, frontmatter = frontmatter })
 
-	FileUtils.save_html_file(test_path..DirectoriesType.DOCS_DIR..'/index', html)
+	FileUtils.save_html_file(DirectoriesType.DOCS_DIR..'/index', html)
 end
 
 local function process_markdown_files()
 	local frontmatter_list = {}
 
-	for file_name in lfs.dir(test_path..DirectoriesType.PAGES_DIR) do
+	for file_name in lfs.dir(DirectoriesType.PAGES_DIR) do
 		if file_name:match('%.md$') then
-			local markdown_content = FileUtils.get_file_content(test_path..DirectoriesType.PAGES_DIR..'/'..file_name)
+			local markdown_content = FileUtils.get_file_content(DirectoriesType.PAGES_DIR..'/'..file_name)
 
 			if #markdown_content > 0 then
 				local frontmatter = MarkdownParser:get_frontmatter(file_name, markdown_content)
 				table.insert(frontmatter_list, frontmatter)
 
 				local html = MarkdownParser:parse(markdown_content)
-				FileUtils.save_html_file(test_path..DirectoriesType.DOCS_DIR..'/'..frontmatter.slug, html)
+				FileUtils.save_html_file(DirectoriesType.DOCS_DIR..'/'..frontmatter.slug, html)
 			end
 
 		end
