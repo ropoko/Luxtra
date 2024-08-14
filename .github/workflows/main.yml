@@ -27,23 +27,23 @@ jobs:
       run: |
         lua main.lua build
 
-		- name: Upload artifact
-			uses: actions/upload-artifact@v1
-			with:
-				path: './docs'
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1
+      with:
+        path: './docs'
 
-	deploy:
-		needs: build
+  deploy:
+    needs: build
 
-		permissions:
-			pages: write
-			id-token: write
+    permissions:
+      pages: write
+      id-token: write
 
-		environment:
-			name: gh-pages
-			url: ${{ steps.deployment.outputs.page_url }}
+    environment:
+      name: gh-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
-		runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Deploy to GitHub Pages
