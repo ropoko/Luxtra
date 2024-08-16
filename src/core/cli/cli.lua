@@ -1,4 +1,5 @@
 local lummander = require('lummander')
+local Themes = require('luxtra.types.themes')
 local Actions = require('luxtra.core.cli.actions')
 
 local Cli = {
@@ -24,12 +25,12 @@ function Cli:options()
 	end)
 
 
-	self.instance:command('build', 'build the website')
+	self.instance:command('build [theme]', 'build the website')
 	:action(function(parsed)
-		Actions:build()
+		local theme = parsed.theme or Themes.DEFAULT
+		Actions:build(theme)
 	end)
 end
-
 
 function Cli:run(arg)
 	self:new()

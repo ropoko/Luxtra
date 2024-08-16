@@ -66,33 +66,15 @@ local function check_directories()
 	end
 end
 
-local function generate_index_page(frontmatter)
-	local render_html = etlua.compile([[
-		<!DOCTYPE html>
-		<html lang="en">
-		<head>
-			<meta charset="UTF-8">
-			<meta name="viewport" content="width=device-width, initial-scale=1.0">
-			<title><%= title %></title>
-		</head>
-		<body>
-			<h1><%= title %></h1>
-
-			<% for k, item in pairs(frontmatter) do %>
-				<a href="<%= item.slug %>.html"> <h1> <%= item.title %> </h1> </a>
-				<small> <%= item.description %> </small>
-				<hr />
-			<% end %>
-		</body>
-		</html>
-	]])
+local function generate_index_page(frontmatter, theme_template)
+	local render_html = etlua.compile(theme_template)
 
 	local html = render_html({ title = CONFIG.title, frontmatter = frontmatter })
 
 	FileUtils.save_html_file(DirectoriesType.DOCS_DIR..'/index', html)
 end
 
-local function process_markdown_files()
+local function process_markdown_files(theme_template)
 	local frontmatter_list = {}
 
 	for file_name in lfs.dir(DirectoriesType.PAGES_DIR) do
@@ -110,12 +92,14 @@ local function process_markdown_files()
 		end
 	end
 
-	generate_index_page(frontmatter_list)
+	generate_index_page(frontmatter_list, theme_template)
 end
 
-function Actions:build()
+function Actions:build(theme)
+	local theme_template = FileUtils.get_file_content('themes/'..theme..'/index.html')
+
 	check_directories()
-	process_markdown_files()
+	process_markdown_files(theme_template)
 end
 
 return Actions

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title><%= title %></title>
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<div class="container">
+		<header>
+			<h1><%= title %></h1>
+			<!-- <nav>
+				<a href="#">Ropoko | Blog</a>
+			</nav> -->
+		</header>
+
+		<main>
+			<% for k, item in pairs(frontmatter) do %>
+				<div class="blog-post">
+					<a href="<%= item.slug %>.html">
+						<h1> <%= item.title %> </h1>
+					</a>
+
+					<time>Sat Aug 03 2024</time>
+					<p> <%= item.description %> </p>
+				</div>
+			<% end %>
+		</main>
+	</div>
+</body>
+</html>
