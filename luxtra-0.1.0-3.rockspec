@@ -1,5 +1,5 @@
 package = "luxtra"
-version = "0.1.0-2"
+version = "0.1.0-3"
 source = {
 	url = "git://github.com/ropoko/luxtra"
 }
