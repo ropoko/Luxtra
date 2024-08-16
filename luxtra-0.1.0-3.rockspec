@@ -33,6 +33,7 @@ build = {
 		["luxtra.core.cli.cli"] = "src/core/cli/cli.lua",
 		["luxtra.core.markdown_parser"] = "src/core/markdown_parser.lua",
 		["luxtra.types.directories"] = "src/types/directories.lua",
+		["luxtra.types.themes"] = "src/types/themes.lua",
 		["luxtra.utils.file"] = "src/utils/file.lua"
 	},
 
