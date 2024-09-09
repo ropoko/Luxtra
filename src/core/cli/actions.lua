@@ -7,6 +7,7 @@ local json = require('luxtra.lib.json')
 local MarkdownParser = require('luxtra.core.markdown_parser')
 local DirectoriesType = require('luxtra.types.directories')
 local FileUtils = require('luxtra.utils.file')
+local Themes = require('luxtra.core.themes')
 
 local Actions = {}
 
@@ -14,13 +15,12 @@ function Actions:generate()
 	lfs.mkdir(DirectoriesType.PAGES_DIR)
 	lfs.mkdir(DirectoriesType.DOCS_DIR)
 
-	local config = io.open('luxtra.config.json', 'w')
+	local config = io.open(DirectoriesType.CONFIG_FILE, 'w')
 
 	local config_content = [[
 	{
 		"title": "My Blog",
-		"description": "This is my blog",
-		"author": "John Doe"
+		"theme": "default"
 	}
 	]]
 
@@ -96,9 +96,9 @@ local function process_markdown_files(theme_template)
 end
 
 function Actions:build(theme)
-	local theme_template = FileUtils.get_file_content('themes/'..theme..'/index.html')
-
 	check_directories()
+
+	local theme_template = Themes.load_theme(theme)
 	process_markdown_files(theme_template)
 end
 

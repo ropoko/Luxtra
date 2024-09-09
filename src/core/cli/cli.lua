@@ -1,6 +1,7 @@
 local lummander = require('lummander')
 local Themes = require('luxtra.types.themes')
 local Actions = require('luxtra.core.cli.actions')
+local FileUtils = require('luxtra.utils.file')
 
 local Cli = {
 	instance = nil
@@ -27,7 +28,22 @@ function Cli:options()
 
 	self.instance:command('build [theme]', 'build the website')
 	:action(function(parsed)
-		local theme = parsed.theme or Themes.DEFAULT
+		local config_theme = FileUtils.get_config().theme or Themes.DEFAULT
+		local theme = parsed.theme or config_theme
+
+		local theme_found = false
+
+		for _, th in pairs(Themes) do
+			if th == theme then
+				theme_found = true
+			end
+		end
+
+		if not theme_found then
+			error('Theme not found')
+			return
+		end
+
 		Actions:build(theme)
 	end)
 end
