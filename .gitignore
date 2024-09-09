@@ -3,6 +3,7 @@
 *.src.rock
 deps/
 public/
-# test/
+
+pages/
 *.html
 luxtra.config.json
