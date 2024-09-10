@@ -9,7 +9,65 @@ local DirectoriesType = require('luxtra.types.directories')
 local FileUtils = require('luxtra.utils.file')
 local Themes = require('luxtra.core.themes')
 
-local Actions = {}
+local Actions = {
+	config = nil
+}
+
+--[[
+	required files/directories:
+	- luxtra.config.json
+	- pages/
+		- *.md
+]]
+local function check_directories()
+	if not FileUtils.file_exists(DirectoriesType.CONFIG_FILE) then
+		print('luxtra.config.json not found')
+		os.exit(1)
+	end
+
+	Actions.config = json.decode(FileUtils.get_file_content(DirectoriesType.CONFIG_FILE))
+
+	if not FileUtils.file_exists(DirectoriesType.PAGES_DIR) then
+		print('pages/ directory not found')
+		os.exit(1)
+	end
+end
+
+local function generate_index_page(frontmatter, theme_template)
+	local render_html = etlua.compile(theme_template)
+
+	local html = render_html({ title = Actions.config.title, frontmatter = frontmatter })
+
+	FileUtils.save_html_file(DirectoriesType.DOCS_DIR..'/index', html)
+end
+
+local function process_markdown_files(index_template, post_template)
+	local frontmatter_list = {}
+
+	for file_name in lfs.dir(DirectoriesType.PAGES_DIR) do
+		local render_html = etlua.compile(post_template)
+
+		if file_name:match('%.md$') then
+			local markdown_content = FileUtils.get_file_content(DirectoriesType.PAGES_DIR..'/'..file_name)
+
+			if #markdown_content > 0 then
+				local frontmatter = MarkdownParser:get_frontmatter(file_name, markdown_content)
+				table.insert(frontmatter_list, frontmatter)
+
+				local html = render_html({
+					title = frontmatter.title,
+					date = frontmatter.date,
+					description = frontmatter.description,
+					content = MarkdownParser:parse(markdown_content, true)
+				})
+
+				FileUtils.save_html_file(DirectoriesType.DOCS_DIR..'/'..frontmatter.slug, html)
+			end
+		end
+	end
+
+	generate_index_page(frontmatter_list, index_template)
+end
 
 function Actions:generate()
 	lfs.mkdir(DirectoriesType.PAGES_DIR)
@@ -44,62 +102,11 @@ function Actions:generate()
 	page1:close()
 end
 
-local CONFIG = {}
-
---[[
-	required files/directories:
-	- luxtra.config.json
-	- pages/
-		- *.md
-]]
-local function check_directories()
-	if not FileUtils.file_exists(DirectoriesType.CONFIG_FILE) then
-		print('luxtra.config.json not found')
-		os.exit(1)
-	end
-
-	CONFIG = json.decode(FileUtils.get_file_content(DirectoriesType.CONFIG_FILE))
-
-	if not FileUtils.file_exists(DirectoriesType.PAGES_DIR) then
-		print('pages/ directory not found')
-		os.exit(1)
-	end
-end
-
-local function generate_index_page(frontmatter, theme_template)
-	local render_html = etlua.compile(theme_template)
-
-	local html = render_html({ title = CONFIG.title, frontmatter = frontmatter })
-
-	FileUtils.save_html_file(DirectoriesType.DOCS_DIR..'/index', html)
-end
-
-local function process_markdown_files(theme_template)
-	local frontmatter_list = {}
-
-	for file_name in lfs.dir(DirectoriesType.PAGES_DIR) do
-		if file_name:match('%.md$') then
-			local markdown_content = FileUtils.get_file_content(DirectoriesType.PAGES_DIR..'/'..file_name)
-
-			if #markdown_content > 0 then
-				local frontmatter = MarkdownParser:get_frontmatter(file_name, markdown_content)
-				table.insert(frontmatter_list, frontmatter)
-
-				local html = MarkdownParser:parse(markdown_content)
-				FileUtils.save_html_file(DirectoriesType.DOCS_DIR..'/'..frontmatter.slug, html)
-			end
-
-		end
-	end
-
-	generate_index_page(frontmatter_list, theme_template)
-end
-
 function Actions:build(theme)
 	check_directories()
 
-	local theme_template = Themes.load_theme(theme)
-	process_markdown_files(theme_template)
+	local index_template, post_template = Themes.load_theme(theme)
+	process_markdown_files(index_template, post_template)
 end
 
 return Actions

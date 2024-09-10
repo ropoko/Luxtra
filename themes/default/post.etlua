@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title><%= title %></title>
+</head>
+
+<body>
+	<main class="container">
+		<header>
+			<a class="back" href="./index.html">Back</a>
+
+			<h1> <%= title %> </h1>
+			<time> posted on <%= date %> </time>
+			<p> <%= description %> </p>
+		</header>
+
+		<%- content %>
+	</div>
+</body>
+</html>

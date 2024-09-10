@@ -1,9 +1,15 @@
 local MarkdownParser = {}
 
-function MarkdownParser:parse(markdown_text)
+function MarkdownParser:parse(markdown_text, skip_frontmatter)
 	local html = ""
 
-	-- TODO: handle frontmatter
+	if markdown_text:sub(1, 3) == "---" then
+		local _, end_index = markdown_text:find("\n%-%-%-\n", 4)
+
+		if end_index then
+			markdown_text = markdown_text:sub(end_index + 1)
+		end
+	end
 
 	local lines = self:split_lines(markdown_text)
 

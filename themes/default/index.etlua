@@ -7,23 +7,21 @@
 </head>
 
 <body>
-	<div class="container">
+	<main class="container">
 		<header>
 			<h1><%= title %></h1>
 		</header>
 
-		<main>
-			<% for k, item in pairs(frontmatter) do %>
-				<div class="blog-post">
-					<a href="<%= item.slug %>.html">
-						<h1> <%= item.title %> </h1>
-					</a>
+		<% for k, item in pairs(frontmatter) do %>
+			<div class="blog-post">
+				<a href="<%= item.slug %>.html">
+					<h1> <%= item.title %> </h1>
+				</a>
 
-					<time>Sat Aug 03 2024</time>
-					<p> <%= item.description %> </p>
-				</div>
-			<% end %>
-		</main>
-	</div>
+				<time> <%= item.date %> </time>
+				<p> <%= item.description %> </p>
+			</div>
+		<% end %>
+	</main>
 </body>
 </html>
