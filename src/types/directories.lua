@@ -2,8 +2,8 @@
 local DirectoriesType = {
 	CONFIG_FILE = 'luxtra.config.json',
 	PAGES_DIR = 'pages',
-	DOCS_DIR = 'docs'
+	DOCS_DIR = 'docs',
+	THEMES_DIR = 'themes'
 }
 
 return DirectoriesType
-

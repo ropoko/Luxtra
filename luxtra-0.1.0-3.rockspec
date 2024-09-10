@@ -1,5 +1,5 @@
 package = "luxtra"
-version = "0.1.0-2"
+version = "0.1.0-3"
 source = {
 	url = "git://github.com/ropoko/luxtra"
 }
@@ -32,8 +32,13 @@ build = {
 		["luxtra.core.cli.actions"] = "src/core/cli/actions.lua",
 		["luxtra.core.cli.cli"] = "src/core/cli/cli.lua",
 		["luxtra.core.markdown_parser"] = "src/core/markdown_parser.lua",
+		["luxtra.core.themes"] = "src/core/themes.lua",
 		["luxtra.types.directories"] = "src/types/directories.lua",
+		["luxtra.types.themes"] = "src/types/themes.lua",
 		["luxtra.utils.file"] = "src/utils/file.lua"
+
+		-- Themes
+		-- ["luxtra.themes.default"] = "themes/default"
 	},
 
 	install = {

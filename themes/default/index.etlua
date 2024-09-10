@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title><%= title %></title>
+</head>
+
+<body>
+	<main class="container">
+		<header>
+			<h1><%= title %></h1>
+		</header>
+
+		<% for k, item in pairs(frontmatter) do %>
+			<div class="blog-post">
+				<a href="<%= item.slug %>.html">
+					<h1> <%= item.title %> </h1>
+				</a>
+
+				<time> <%= item.date %> </time>
+				<p> <%= item.description %> </p>
+			</div>
+		<% end %>
+	</main>
+</body>
+</html>
