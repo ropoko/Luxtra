@@ -36,7 +36,6 @@ Themes inspired by [dead simple sites](https://deadsimplesites.com/).
 - - [x] light/dark mode
 - [x] add cli tools
 - [x] publish on luarocks
-- [x] publish working example using github pages - [https://ropoko.github.io/test-luxtra/](https://github.com/ropoko/test-luxtra)
 - [ ] add code highlight
 - [ ] add about page
 - [ ] add tags support
