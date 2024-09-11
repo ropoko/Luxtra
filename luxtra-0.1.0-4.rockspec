@@ -20,7 +20,8 @@ dependencies = {
 	"lua >= 5.4",
 	"luafilesystem >= 1.8.0-1",
 	"etlua >= 1.3.0-1",
-	"lummander >= 0.1.0-2"
+	"lummander >= 0.1.0-2",
+	"datafile >= 0.10-1"
 }
 
 build = {
