@@ -3,6 +3,8 @@ A static site generator written in Lua. It processes Markdown files and generate
 
 Inspired by Nextra.
 
+Check a working example [here](https://github.com/ropoko/test-luxtra).
+
 # Install
 ```bash
 luarocks install luxtra
