@@ -38,6 +38,8 @@ build = {
 		["luxtra.utils.file"] = "src/utils/file.lua"
 	},
 
+	copy_directories = { "themes" },
+
 	install = {
 		bin = {
 			"bin/luxtra"

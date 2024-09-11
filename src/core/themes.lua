@@ -1,10 +1,11 @@
 local io = require('io')
 local DirectoriesType = require('luxtra.types.directories')
+local datafile = require('datafile')
 
 local Themes = {}
 
 function Themes.load_theme(theme_name)
-	local theme_path = DirectoriesType.THEMES_DIR .. '/' .. theme_name
+	local theme_path = datafile.path(DirectoriesType.THEMES_DIR .. '/' .. theme_name, 'r')
 
 	-- index page
 	local index_path = theme_path .. '/index.etlua'
