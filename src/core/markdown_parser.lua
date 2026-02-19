@@ -64,6 +64,25 @@ function MarkdownParser:split_lines(text)
 	return lines
 end
 
+function MarkdownParser:parse_image(line)
+	-- images in markdown format
+	-- e.g.: "![alt text](image.png)" will match and return "alt text" and "image.png"
+	local alt_text, image_url = line:match("^!%[(.-)%]%((.-)%)")
+
+	if alt_text and image_url then
+		return string.format("<img src=\"%s\" alt=\"%s\" />\n", image_url, alt_text)
+	end
+
+	-- images in html format
+	-- e.g.: "<img src="image.png" alt="alt text" />" will match and return
+	image_url, alt_text = line:match("^<img src=\"(.-)\" alt=\"(.-)\" />")
+	if alt_text and image_url then
+		return string.format("<img src=\"%s\" alt=\"%s\" />\n", image_url, alt_text)
+	end
+
+	return nil
+end
+
 -- TODO: create a different module for parsing
 function MarkdownParser:parse_line(line)
 	-- this represents: 1 or more #, followed by 1 or more spaces, followed by 1 or more characters
@@ -74,12 +93,10 @@ function MarkdownParser:parse_line(line)
 		return string.format("<h%d>%s</h%d>\n", #header_level, header_text, #header_level)
 	end
 
-	-- e.g.: "![alt text](image.png)" will match and return "alt text" and "image.png"
-	local alt_text, image_url = line:match("^!%[(.-)%]%((.-)%)")
+	local image = self:parse_image(line)
 
-	if alt_text and image_url then
-		return string.format("<img style=\"width: %s; height: %s;\" src=\"%s\" alt=\"%s\" />\n", '100%', '100%', image_url,
-			alt_text)
+	if image then
+		return image
 	end
 
 	-- e.g.: "- Item 1" will match and return "Item 1"
@@ -101,6 +118,13 @@ function MarkdownParser:parse_inline(text)
 
 	-- Links
 	text = text:gsub("%[(.-)%]%((.-)%)", "<a href=\"%2\">%1</a>")
+
+	-- Images
+	local image = self:parse_image(text)
+
+	if image then
+		return image
+	end
 
 	return text
 end
