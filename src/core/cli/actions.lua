@@ -8,6 +8,7 @@ local MarkdownParser = require('luxtra.core.markdown_parser')
 local DirectoriesType = require('luxtra.types.directories')
 local FileUtils = require('luxtra.utils.file')
 local Themes = require('luxtra.core.themes')
+local Plugins = require('luxtra.core.plugins')
 
 local Actions = {
 	config = nil
@@ -38,30 +39,51 @@ local function generate_index_page(frontmatter, theme_template)
 
 	local html = render_html({ title = Actions.config.title, frontmatter = frontmatter })
 
-	FileUtils.save_html_file(DirectoriesType.DOCS_DIR..'/index', html)
+	FileUtils.save_html_file(DirectoriesType.DOCS_DIR .. '/index', html)
 end
 
-local function process_markdown_files(index_template, post_template)
+local function inject_head(template_html, injections_html)
+	if #injections_html > 0 then
+		return template_html:gsub("</head>", "\t" .. injections_html .. "\n</head>")
+	end
+	return template_html
+end
+
+local function process_markdown_files(index_template, post_template, ctx)
 	local frontmatter_list = {}
 
 	for file_name in lfs.dir(DirectoriesType.PAGES_DIR) do
-		local render_html = etlua.compile(post_template)
-
 		if file_name:match('%.md$') then
-			local markdown_content = FileUtils.get_file_content(DirectoriesType.PAGES_DIR..'/'..file_name)
+			local file_path = DirectoriesType.PAGES_DIR .. '/' .. file_name
+			local markdown_content = FileUtils.get_file_content(file_path)
 
 			if #markdown_content > 0 then
 				local frontmatter = MarkdownParser:get_frontmatter(file_name, markdown_content)
-				table.insert(frontmatter_list, frontmatter)
+				frontmatter = Plugins.emit('before_page', ctx, file_path, frontmatter)
 
-				local html = render_html({
-					title = frontmatter.title,
-					date = frontmatter.date,
-					description = frontmatter.description,
-					content = MarkdownParser:parse(markdown_content, true)
-				})
+				if frontmatter ~= false then
+					table.insert(frontmatter_list, frontmatter)
 
-				FileUtils.save_html_file(DirectoriesType.DOCS_DIR..'/'..frontmatter.slug, html)
+					local raw_markdown = MarkdownParser:strip_frontmatter(markdown_content)
+					raw_markdown = Plugins.emit('transform_markdown', ctx, raw_markdown, frontmatter)
+
+					local html = MarkdownParser:parse(raw_markdown, true)
+					html = Plugins.emit('transform_html', ctx, html, frontmatter)
+
+					local template_ctx = Plugins.emit_merge('template_context', {
+						title = frontmatter.title,
+						date = frontmatter.date,
+						description = frontmatter.description,
+						content = html
+					}, ctx, frontmatter, html)
+
+					local head_injections = Plugins.emit_collect('head_injections', ctx, frontmatter)
+					local injections_html = Plugins.render_head_injections(head_injections)
+					local page_template = inject_head(post_template, injections_html)
+					local render_html = etlua.compile(page_template)
+
+					FileUtils.save_html_file(DirectoriesType.DOCS_DIR .. '/' .. frontmatter.slug, render_html(template_ctx))
+				end
 			end
 		end
 	end
@@ -105,8 +127,21 @@ end
 function Actions:build(theme)
 	check_directories()
 
+	Plugins.load(Actions.config)
+
+	local ctx = {
+		config = Actions.config,
+		theme = theme,
+		docs_dir = DirectoriesType.DOCS_DIR,
+		pages_dir = DirectoriesType.PAGES_DIR
+	}
+
+	Plugins.emit('before_build', ctx)
+
 	local index_template, post_template = Themes.load_theme(theme)
-	process_markdown_files(index_template, post_template)
+	process_markdown_files(index_template, post_template, ctx)
+
+	Plugins.emit('after_build', ctx)
 end
 
 return Actions

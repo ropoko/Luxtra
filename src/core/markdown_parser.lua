@@ -1,5 +1,33 @@
 local MarkdownParser = {}
 
+function MarkdownParser:escape_html(text)
+	return text
+		:gsub("&", "&amp;")
+		:gsub("<", "&lt;")
+		:gsub(">", "&gt;")
+		:gsub('"', "&quot;")
+end
+
+function MarkdownParser:parse_code_blocks(text)
+	local blocks = {}
+	local block_index = 0
+
+	local function replace_code(match_lang, match_content)
+		block_index = block_index + 1
+		local lang = (match_lang or ""):gsub("^%s*(.-)%s*$", "%1")
+		local escaped = self:escape_html(match_content)
+		local lang_attr = #lang > 0 and string.format(' class="language-%s"', lang) or ""
+		local placeholder = string.format("__CODEBLOCK_%d__", block_index)
+		blocks[placeholder] = string.format('<pre><code%s>%s</code></pre>', lang_attr, escaped)
+		return placeholder
+	end
+
+	-- Match ```optional_lang\ncontent\n```
+	local processed = text:gsub("```([^\n]*)\n(.-)```", replace_code)
+
+	return processed, blocks
+end
+
 function MarkdownParser:parse(markdown_text, skip_frontmatter)
 	local html = ""
 
@@ -11,10 +39,16 @@ function MarkdownParser:parse(markdown_text, skip_frontmatter)
 		end
 	end
 
-	local lines = self:split_lines(markdown_text)
+	local processed, code_blocks = self:parse_code_blocks(markdown_text)
+	local lines = self:split_lines(processed)
 
 	for _, line in pairs(lines) do
 		html = html .. self:parse_line(line)
+	end
+
+	for placeholder, block_html in pairs(code_blocks) do
+		html = html:gsub("<p>" .. placeholder .. "</p>", block_html)
+		html = html:gsub(placeholder, block_html)
 	end
 
 	return html
@@ -61,6 +95,16 @@ function MarkdownParser:parse_inline(text)
 	text = text:gsub("%[(.-)%]%((.-)%)", "<a href=\"%2\">%1</a>")
 
 	return text
+end
+
+function MarkdownParser:strip_frontmatter(markdown_text)
+	if markdown_text:sub(1, 3) == "---" then
+		local _, end_index = markdown_text:find("\n%-%-%-\n", 4)
+		if end_index then
+			return markdown_text:sub(end_index + 1)
+		end
+	end
+	return markdown_text
 end
 
 function MarkdownParser:get_frontmatter(file_name, markdown_text)
