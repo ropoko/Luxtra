@@ -2,10 +2,10 @@ local MarkdownParser = {}
 
 function MarkdownParser:escape_html(text)
 	return text
-		:gsub("&", "&amp;")
-		:gsub("<", "&lt;")
-		:gsub(">", "&gt;")
-		:gsub('"', "&quot;")
+			:gsub("&", "&amp;")
+			:gsub("<", "&lt;")
+			:gsub(">", "&gt;")
+			:gsub('"', "&quot;")
 end
 
 function MarkdownParser:parse_code_blocks(text)
@@ -72,6 +72,14 @@ function MarkdownParser:parse_line(line)
 
 	if header_level then
 		return string.format("<h%d>%s</h%d>\n", #header_level, header_text, #header_level)
+	end
+
+	-- e.g.: "![alt text](image.png)" will match and return "alt text" and "image.png"
+	local alt_text, image_url = line:match("^!%[(.-)%]%((.-)%)")
+
+	if alt_text and image_url then
+		return string.format("<img style=\"width: %s; height: %s;\" src=\"%s\" alt=\"%s\" />\n", '100%', '100%', image_url,
+			alt_text)
 	end
 
 	-- e.g.: "- Item 1" will match and return "Item 1"
