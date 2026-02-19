@@ -28,16 +28,3 @@ In the file `luxtra.config.json`, you can change the `title` of your blog and ch
 Currently there's only one theme (default).
 
 Themes inspired by [dead simple sites](https://deadsimplesites.com/).
-
-
-## TODO
-- [x] read/process markdown files
-- [x] define a header model for each file (frontmatter)
-- [x] use info from frontmatter to create a index page
-- [x] add themes
-- - [x] light/dark mode
-- [x] add cli tools
-- [x] publish on luarocks
-- [ ] add code highlight
-- [ ] add about page
-- [ ] add tags support
