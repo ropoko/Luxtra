@@ -29,8 +29,10 @@ function Themes.load_theme(theme_name)
 	local style_content = style_file:read("*all")
 	style_file:close()
 
+	local escaped_index = style_content:gsub("%%", "%%%%")
+
 	-- inject css
-	local index_with_css = index_content:gsub("</head>", "<style>" .. style_content .. "</style></head>")
+	local index_with_css = index_content:gsub("</head>", "<style>" .. escaped_index .. "</style></head>")
 
 	-- post page
 	local post_path = theme_path .. '/post.etlua'
@@ -54,7 +56,9 @@ function Themes.load_theme(theme_name)
 	local post_style_content = post_style_file:read("*all")
 	post_style_file:close()
 
-	local post_with_css = post_content:gsub("</head>", "<style>" .. post_style_content .. "</style></head>")
+	local escaped_post = post_style_content:gsub("%%", "%%%%")
+
+	local post_with_css = post_content:gsub("</head>", "<style>" .. escaped_post .. "</style></head>")
 
 
 	return index_with_css, post_with_css
